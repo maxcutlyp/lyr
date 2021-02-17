@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"strings"
-	"sync"
 
 	"github.com/satoqz/lyr/query"
 	"github.com/spf13/cobra"
@@ -47,17 +46,7 @@ func queryExec(_ *cobra.Command, args []string) error {
 
 	song := data[sel-1]
 
-	var lyrics string
-	var wg sync.WaitGroup
-
-	wg.Add(1)
-
-	go func() {
-		lyrics, err = song.ScrapeLyrics()
-		wg.Done()
-	}()
-
-	wg.Wait()
+	lyrics, err := song.ScrapeLyrics()
 
 	fmt.Print("\033[H\033[2J")
 	if err != nil {
