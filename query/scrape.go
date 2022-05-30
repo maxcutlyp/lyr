@@ -44,9 +44,23 @@ func (data queryData) ScrapeLyrics() (lyrics string, err error) {
                     var close_esc_code string
 
                     switch node.Data {
+                        case "h2": // there's a h2 at the top with "$(songtitle) lyrics" that we want to exclude
+                            return
                         case "br":
                             buf.WriteString("\n")
                             return
+                        case "div":
+                            for _, attr := range node.Attr {
+                                switch attr.Key {
+                                    case "class":
+                                        if strings.HasPrefix(attr.Val, "RightSidebar__Container") ||
+                                           strings.HasPrefix(attr.Val, "Lyrics__Footer") {
+                                            return
+                                        }
+                                    case "data-exclude-from-selection":
+                                        buf.WriteString("\n")
+                                }
+                            }
                         case "b":
                             open_esc_code = "\033[1m"
                             close_esc_code = "\033[22m"
@@ -65,10 +79,9 @@ func (data queryData) ScrapeLyrics() (lyrics string, err error) {
             }
         }
 
-        sel := doc.Find("[data-lyrics-container=\"true\"]")
+        sel := doc.Find("#lyrics-root")
         for _, node := range sel.Nodes {
             parse_node(node)
-            buf.WriteString("\n")
         }
 
 		return strings.Trim(buf.String(), "\n "), nil
