@@ -8,5 +8,6 @@ Query songs &amp; lyrics using the command line
 ## Usage
 - Perform search requests using `lyr query <song name or lyrics excerpt>` or the aliases `get`, `find` or `search` 
 - Pick one of the options from the resulting songs and fetch its lyrics
+- Optionally provide a pager (like `less`) with `lyr query -p less <song name or lyrics excerpt>`
 
 This could be improved and extended upon quite a lot, but for now it gets the job done I suppose
