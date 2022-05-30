@@ -65,9 +65,10 @@ func (data queryData) ScrapeLyrics() (lyrics string, err error) {
             }
         }
 
-        sel := doc.Find("[data-lyrics-container=\"true\"]").First()
+        sel := doc.Find("[data-lyrics-container=\"true\"]")
         for _, node := range sel.Nodes {
             parse_node(node)
+            buf.WriteString("\n")
         }
 
 		return strings.Trim(buf.String(), "\n "), nil
